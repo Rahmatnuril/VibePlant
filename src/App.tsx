@@ -165,61 +165,7 @@ function TaskCountdown({ taskId, doc, isLightMode }: TaskCountdownProps) {
 }
 
 // --- MOCK DATA ---
-const MOCK_TASKS = [
-  {
-    id: 1,
-    title: 'Refactor Core Logic Engine',
-    doc: '4 subtasks • 2h estimate • Critical',
-    xp: 450,
-    priority: 'Critical',
-    completed: false,
-    ai: true,
-    notes: 'Optimize the central state loop and improve memory usage during state transitions.',
-    subtasks: [
-      { id: 1001, title: 'Profile existing state loops', completed: true },
-      { id: 1002, title: 'Refactor dispatch reducers', completed: false },
-      { id: 1003, title: 'Implement debounce on render updates', completed: false },
-      { id: 1004, title: 'Verify layout with tests', completed: false }
-    ]
-  },
-  {
-    id: 2,
-    title: 'GDG Presentation Slides',
-    doc: 'Completed • 12:00 PM • Normal',
-    xp: 120,
-    priority: 'Normal',
-    completed: true,
-    completedAt: new Date(Date.now() - 30 * 3600 * 1000).toISOString(),
-    ai: false,
-    notes: 'Create summary slide decks detailing the project timeline, vision, and core outcomes.',
-    subtasks: [
-      { id: 2001, title: 'Draft outline of introduction', completed: true },
-      { id: 2002, title: 'Embed screenshots & charts', completed: true }
-    ]
-  },
-  {
-    id: 3,
-    title: 'Review PRs from Team',
-    doc: '30 mins • Low',
-    xp: 50,
-    priority: 'Low',
-    completed: false,
-    ai: false,
-    notes: 'Check critical reviews for open pull requests and merge finalized updates.',
-    subtasks: []
-  },
-  {
-    id: 4,
-    title: 'Design Gacha Modal',
-    doc: '1h estimate • High',
-    xp: 200,
-    priority: 'High',
-    completed: false,
-    ai: true,
-    notes: 'Formulate responsive modal structures and particles for visual feedback.',
-    subtasks: []
-  },
-];
+const MOCK_TASKS = [];
 
 const ANALYTICS_DATA = [
   { day: 'Mon', focus: 4, energy: 80 }, { day: 'Tue', focus: 6, energy: 95 },
@@ -238,48 +184,9 @@ const RADAR_DATA = [
   { subject: 'Energy Mgt', A: 85, fullMark: 150 }, { subject: 'Flow State', A: 65, fullMark: 150 },
 ];
 
-const MACRO_GOALS = [
-  { 
-    id: 1, 
-    title: 'Build React Native App', 
-    progress: 50, 
-    deadline: 'End of Month', 
-    tasks: 4, 
-    completed_tasks: 2, 
-    category: 'Engineering',
-    todos: [
-      { id: 101, title: 'Setup React Native CLI', completed: true },
-      { id: 102, title: 'Configure Navigation', completed: true },
-      { id: 103, title: 'Implement Auth Flow', completed: false },
-      { id: 104, title: 'Integrate API', completed: false },
-    ]
-  },
-  { 
-    id: 2, 
-    title: 'Publish 4 Tech Articles', 
-    progress: 50, 
-    deadline: 'Nov 15', 
-    tasks: 2, 
-    completed_tasks: 1, 
-    category: 'Writing',
-    todos: [
-      { id: 201, title: 'Write "Intro to React 19"', completed: true },
-      { id: 202, title: 'Write "Tailwind CSS v4"', completed: false },
-    ]
-  },
-];
+const MACRO_GOALS = [];
 
-const INITIAL_INVENTORY = [
-  { id: 1, icon: '🧢', rarity: 'common', equipped: false, type: 'head' },
-  { id: 2, icon: '👓', rarity: 'rare', equipped: true, type: 'face' },
-  { id: 3, icon: '🧶', rarity: 'common', equipped: false, type: 'bottomRight' },
-  { id: 4, icon: '👔', rarity: 'epic', equipped: false, type: 'neck' },
-  { id: 5, icon: '🎧', rarity: 'legendary', equipped: false, type: 'head' },
-  { id: 6, icon: '🍕', rarity: 'common', equipped: false, type: 'bottomRight' },
-  { id: 7, icon: '🍗', rarity: 'common', equipped: false, type: 'bottomLeft' },
-  { id: 8, icon: '🛸', rarity: 'mythic', equipped: true, type: 'topRight' },
-  { id: 9, icon: '💎', rarity: 'epic', equipped: false, type: 'bottomLeft' },
-];
+const INITIAL_INVENTORY = [];
 
 const STORE_ITEMS = [
   { id: 101, icon: '👑', name: 'Golden Crown', type: 'head', price: 5000, rarity: 'legendary' },
@@ -343,10 +250,10 @@ export default function App() {
   const [showMorningReminder, setShowMorningReminder] = useState(false);
   const [showInfoGuides, setShowInfoGuides] = useState(false);
   
-  const [coins, setCoins] = useState(12450);
-  const [tickets, setTickets] = useState(3);
-  const [level, setLevel] = useState(24);
-  const [pxp, setPxp] = useState(78);
+  const [coins, setCoins] = useState(0);
+  const [tickets, setTickets] = useState(0);
+  const [level, setLevel] = useState(0);
+  const [pxp, setPxp] = useState(0);
   const [showAiThinking, setShowAiThinking] = useState(false);
   const [isGachaRolling, setIsGachaRolling] = useState(false);
   const [gachaReward, setGachaReward] = useState<any | null>(null);
@@ -1187,15 +1094,36 @@ export default function App() {
     return inventory.filter(i => i.equipped).map(item => {
       let posClass = '';
       const s = size === 'small';
-      if (item.type === 'head') posClass = s ? '-top-3 left-1/2 -translate-x-1/2 text-4xl z-20 drop-shadow-md' : '-top-6 left-1/2 -translate-x-1/2 text-6xl z-20 drop-shadow-xl';
-      else if (item.type === 'face') posClass = s ? 'top-6 left-1/2 -translate-x-1/2 text-4xl z-20 drop-shadow-md' : 'top-14 left-1/2 -translate-x-1/2 text-6xl z-20 drop-shadow-xl';
-      else if (item.type === 'neck') posClass = s ? 'top-14 left-1/2 -translate-x-1/2 text-3xl z-20 drop-shadow-md' : 'top-28 left-1/2 -translate-x-1/2 text-5xl z-20 drop-shadow-xl';
-      else if (item.type === 'bottomRight') posClass = s ? 'bottom-0 -right-2 text-3xl z-20 drop-shadow-md' : 'bottom-0 -right-6 text-6xl z-20 drop-shadow-xl';
-      else if (item.type === 'bottomLeft') posClass = s ? 'bottom-0 -left-2 text-3xl z-20 drop-shadow-md' : 'bottom-0 -left-6 text-6xl z-20 drop-shadow-xl';
-      else if (item.type === 'topRight') posClass = s ? '-top-2 -right-4 text-3xl animate-bounce z-20 drop-shadow-md' : '-top-4 -right-10 text-6xl animate-bounce z-20 drop-shadow-xl';
+      
+      // Adjusted positions and sizes for a better "fit" and larger presence
+      if (item.type === 'head') {
+        posClass = s 
+          ? '-top-6 left-1/2 -translate-x-1/2 text-5xl z-20 drop-shadow-md' 
+          : '-top-12 left-1/2 -translate-x-1/2 text-9xl z-20 drop-shadow-xl';
+      } else if (item.type === 'face') {
+        posClass = s 
+          ? 'top-4 left-1/2 -translate-x-1/2 text-4xl z-20 drop-shadow-md' 
+          : 'top-12 left-1/2 -translate-x-1/2 text-8xl z-20 drop-shadow-xl';
+      } else if (item.type === 'neck') {
+        posClass = s 
+          ? 'top-12 left-1/2 -translate-x-1/2 text-4xl z-20 drop-shadow-md' 
+          : 'top-24 left-1/2 -translate-x-1/2 text-7xl z-20 drop-shadow-xl';
+      } else if (item.type === 'bottomRight') {
+        posClass = s 
+          ? 'bottom-0 -right-4 text-4xl z-20 drop-shadow-md' 
+          : 'bottom-0 -right-12 text-8xl z-20 drop-shadow-xl';
+      } else if (item.type === 'bottomLeft') {
+        posClass = s 
+          ? 'bottom-0 -left-4 text-4xl z-20 drop-shadow-md' 
+          : 'bottom-0 -left-12 text-8xl z-20 drop-shadow-xl';
+      } else if (item.type === 'topRight') {
+        posClass = s 
+          ? '-top-4 -right-6 text-4xl animate-bounce z-20 drop-shadow-md' 
+          : '-top-8 -right-16 text-8xl animate-bounce z-20 drop-shadow-xl';
+      }
       
       return (
-        <div key={item.id} className={`absolute ${posClass}`}>
+        <div key={item.id} className={`absolute ${posClass} pointer-events-none select-none`}>
           {item.icon}
         </div>
       );
@@ -2097,8 +2025,8 @@ export default function App() {
 
           <div className={`p-6 rounded-[2rem] col-span-2 flex flex-col justify-center ${glassTheme}`}>
             <h4 className={`text-xs font-bold uppercase tracking-widest mb-4 ${textMute}`}>Daily Summary</h4>
-            <div className="grid grid-cols-1 gap-4">
-               <div className={`p-4 rounded-2xl border ${isLightMode ? 'bg-amber-50 border-amber-100' : 'bg-amber-500/5 border-amber-500/10'}`}>
+            <div className="grid grid-cols-1 gap-4 translate-x-4 translate-y-4">
+               <div className={`mt-[6px] mb-[6px] ml-[5px] mr-[5px] p-4 rounded-2xl border ${isLightMode ? 'bg-amber-50 border-amber-100' : 'bg-amber-500/5 border-amber-500/10'}`}>
                  <span className={`text-[10px] font-bold uppercase tracking-widest text-amber-500`}>Coins Earned Today</span>
                  <p className={`text-xl font-black ${isLightMode ? 'text-stone-900' : 'text-white'}`}>
                    🪙 {completedDaily * 50}
