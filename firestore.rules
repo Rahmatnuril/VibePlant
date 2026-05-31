@@ -1,0 +1,49 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Default-deny catch-all
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // Auth validation helpers
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isOwner(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
+
+    function incoming() {
+      return request.resource.data;
+    }
+
+    // Validate companion data shape and boundaries
+    function isValidCompanion(data) {
+      return data.energy is int
+        && data.energy >= 0
+        && data.energy <= 100
+        && data.happiness is int
+        && data.happiness >= 0
+        && data.happiness <= 100
+        && data.hunger is int
+        && data.hunger >= 0
+        && data.hunger <= 100
+        && data.affection is int
+        && data.affection >= 0
+        && data.affection <= 100
+        && data.coins is int
+        && data.level is int
+        && data.updatedAt is timestamp;
+    }
+
+    // Secure companion status collection matches
+    match /companion_status/{userId} {
+      allow read: if isOwner(userId);
+      allow create: if isOwner(userId) && isValidCompanion(incoming()) && incoming().updatedAt == request.time;
+      allow update: if isOwner(userId) && isValidCompanion(incoming()) && incoming().updatedAt == request.time;
+      allow delete: if false;
+    }
+  }
+}

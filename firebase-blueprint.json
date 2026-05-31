@@ -1,0 +1,40 @@
+{
+  "entities": {
+    "companion": {
+      "title": "CompanionStatus",
+      "description": "Information about Gendut's current states (energy, happiness, hunger, affection, coins, level)",
+      "type": "object",
+      "properties": {
+        "energy": {
+          "type": "integer"
+        },
+        "happiness": {
+          "type": "integer"
+        },
+        "hunger": {
+          "type": "integer"
+        },
+        "affection": {
+          "type": "integer"
+        },
+        "coins": {
+          "type": "integer"
+        },
+        "level": {
+          "type": "integer"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": ["energy", "happiness", "updatedAt"]
+    }
+  },
+  "firestore": {
+    "companion_status/{userId}": {
+      "schema": "companion",
+      "description": "Stores current levels and state metrics for the user's virtual pet companion"
+    }
+  }
+}
